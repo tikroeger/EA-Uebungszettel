@@ -1,0 +1,89 @@
+
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amssymb,amsmath}
+\usepackage[utf8x]{inputenc}
+
+\oddsidemargin=-0.7cm \evensidemargin=-0.7cm \topmargin=-0.7cm
+\textwidth=18cm \textheight=24cm %
+
+
+\oddsidemargin=-0.25cm \evensidemargin=-0.25cm \topmargin=-0.25cm
+\textwidth=16.5cm \textheight=23cm %
+
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+ 
+\begin{document}
+
+\section*{Übungszettel 01}
+Von Bartosz Bogacz, Timo Milbich, Till Kroeger
+
+\subsection*{Aufgabe 1a)}     
+Da jede Kante $e \in E$ genau zwei Knoten verbindet gilt: $$\sum_{v \in V} deg(v) = 2 \cdot |E|$$
+Die Menge $V$ kann aufgeteilt werden in alle ungerade Knoten $v_{odd}$ und geraden Knoten $v_{even}$, so dass gelten muss: 
+$$\sum_{v_{odd}} deg(v) + \sum_{v_{even}} deg(v) = 2 \cdot |E|$$
+Da $2 \cdot |E|$ gerade ist, müssen die beiden Summen gerade sein. Da in $\sum_{v_{odd}} deg(v)$ jeder einzelne Summand ungerade ist muss $|v_{odd}|$ gerade sein.
+
+\subsection*{Aufgabe 1b)}     
+Für den Knotengrad gilt : $$0 \leq deg(v) \leq |V| -1$$
+Gegeben sei ein Knoten $v'$ mit 
+\begin{itemize}
+ \item $deg(v') = |V| -1$, dann gilt $|\{v | deg(v)=0\}| = 0$. D.h. es wenn es einen Knoten $v'$ gibt, welcher mit allen anderen verbunden ist, kann es keinen Knoten geben, der nicht verbunden ist.
+\item $deg(v') = |V| - 2$, dann gilt $|\{v | deg(v)=0 \vee deg(v)= 1 \}| = 1$. D.h. es wenn es einen Knoten $v'$ gibt, welcher mit allen anderen bis auf einen verbunden ist, dann kann es nur einen einizgen Knoten mit $deg(v) = 0$ oder $deg(v) = 1$ geben.
+\end{itemize}
+Diese Iteration kann bis $deg(v') = 0$ vorgeführt werden. Für jede Kantenkonfigurationen gibt es nur $|V| - 1$ mögliche Knotengrade. Damit müssen mindestens zwei Knoten denselben Grad besitzen.
+\subsection*{Aufgabe 2a)}     
+Ist $G$ nicht zusammenhängend, so ist es kein Baum. (Definition)
+
+Ist $|E| < |V| - 1$ so gibt es mindestens einen unverbundenen Knoten. Damit ist der Graph nicht zusammenhängend.
+
+
+Es bleibt zu zeigen, dass der zusammenhängende Graph mit $|V| -1$ Kanten kreisfrei (und damit ein Baum) ist: Angenommen er hätte einen Kreis $C$, dann könnte eine Kante $e$ aus diesem Kreis entfernt werden, und der Graph mit $|V| -2$ Kanten bliebe zusammenhängend. Dies ist ein Widerspruch zur obigen Beobachtung. D.h. der Graph kann keinen Kreis enthalten und ist somit ein Baum.
+
+\subsection*{Aufgabe 2b)}     
+Wenn es weniger als einen Pfad gibt, so ist der Graph nicht zusammenhängend und damit kein Baum.
+
+Gibt es mehr als 2 Pfade, so enthält der Graph einen Kreis, da er ungerichtet ist. Somit ist der Graph kein Baum.
+
+
+\subsection*{Aufgabe 3a)}  
+Sei $A$ eine Adjazenzmatrix für $G$ und $v_i \quad \forall i = 1,\dots,|V|$ eine konsistente Durchnummerierung der Knoten.
+ 
+\begin{verbatim}
+0. Kopiere Aneu = A.
+1. Für alle w \in V
+2.     Für alle v_i \in V
+3.       Für alle v_j \in V, wobei j > i
+4.           Falls A_{w,i} = 1 und A_{w,j} = 1
+5.                 Setze  Aneu_{j,i} = Aneu_{i,j} = 1
+\end{verbatim}
+Jede Spalte der Adjazenzmatrix wird durchlaufen. Für jedes paar von Nachbarn $v_i$,$v_j$ von $w$ wird eine neue Kante in der Adjazenzmatrix des Potenz-Graphen zwischen $v_i$,$v_j$ erstellt.
+$Aneu$ ist die Adjazenzmatrix des Potenz-Graph. \\
+
+Komplexität:
+Die Schleife (1) läuft über alle Knoten und ist in $O(|V|)$. Die inneren Schleifen (2) und (3) laufen paarweise über Knoten und sind damit in $O(|V| log |V|)$. Damit ist der Algorithmus in $$O(|V|) \cdot  O(|V| log |V|) =  O(|V|^2 log |V|)$$
+
+\subsection*{Aufgabe 3b)} 
+Sei $A$ eine Adjazenzliste für $G$, $A(w)$ die Liste der Nachbarn von $w$ und $v^w_i \quad \forall i = 1,\dots,|A(w)|$ eine konsistente Durchnummerierung der Nachbarn von $w$.
+
+\begin{verbatim}
+0. Kopiere Aneu = A.
+1. Für alle w \in V
+2.     Für alle v_i \in A(w)
+3.       Für alle v_j \in A(w), wobei j > i
+4.           Füge v_j in Liste Aneu(v_i) ein.
+5.           Füge v_i in Liste Aneu(v_j) ein.
+
+\end{verbatim}
+Dieselbe Vorgehensweise wie bei der Adjazenzmatrix, nur dass für jedes $w$ nicht alle möglichen $v \in V$ durchgegangen werden müssen, sondern nur die Einträge in der Adjazenzliste. Die Prüfung auf die Existenz der Kanten kann deshalb entfallen. $Aneu$ ist die Adjazenzliste des Potenz-Graph. \\
+
+Komplexität:
+Die Schleife (1) läuft über alle Knoten und ist in $O(|V|)$. Die inneren Schleifen (2) und (3) laufen paarweise über die Nachbarn von $w$ und sind damit in $O(k \;log \; k)$ (Sei $k$ der maximale Knotengrad im Graph.) Damit ist der Algorithmus in $$O(|V|) \cdot  O(k \; log\; k) =  O(|V| \; k \; log \; k)$$
+\end{document} 
+    
