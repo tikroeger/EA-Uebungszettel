@@ -1,0 +1,46 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8x]{inputenc}
+
+\begin{document}
+
+\section*{Aufgabe 4}
+
+\paragraph{a)}
+
+\begin{verbatim}
+    def adjc(u, G):
+        # Returns a list of adjecent nodes to node u in graph G.
+
+    def dist(u, v, G):
+        if u == v:
+            return 1
+        else:
+            return min([dist(u_1, v, G) for u_1 in adjc(u, G)])+1
+
+    def diameter(G):
+        return max([dist(u, v) for u, v in G])
+\end{verbatim}
+
+\paragraph{b)}
+
+\begin{verbatim}
+    def random(G):
+        # Select a node at random in G.
+
+    def marked(u, G):
+        # Marks node u in graph G.
+
+    def depth(u, G):
+        marked(u, G)
+        return max([depth(u_1, G) \
+            for u_1 in adjc(u) if not marked(u_1, G)])
+
+    def tree_diameter(G):
+        u = random(G)
+        return deep(u)
+\end{verbatim}
+
+
+
+
+\end{document}
