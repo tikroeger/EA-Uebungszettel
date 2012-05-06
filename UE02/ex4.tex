@@ -27,17 +27,71 @@
     def random(G):
         # Select a node at random in G.
 
-    def marked(u, G):
+    def mark(u, G):
         # Marks node u in graph G.
 
+    def marked(u, G):
+        # Checks whether node u in graph G has been marked.
+
     def depth(u, G):
-        marked(u, G)
-        return max([depth(u_1, G) \
-            for u_1 in adjc(u) if not marked(u_1, G)])
+        mark(u, G)
+        return max([(depth(u_1, G)+1) \
+            for u_1 in adjc(u) if not marked(u_1, G)]
+            + [1])
 
     def tree_diameter(G):
         u = random(G)
-        return deep(u)
+        mark(u, g)
+        dephts = sort([depth(u_1, G) for u_1 in adjc(u, G)])
+        return (depths[0] + 1) \
+            + (depths[1] + 1) if len(depths) > 1 else 0
+\end{verbatim}
+
+Wir nehmen an der Graph G sei zusammenhängend.
+Da der Graph G ein Baum ist, hat er keine Kreise.
+Somit gibt es genau einen Weg von jedem Knoten zu jedem anderen Knoten.
+
+\emph{depth} nimmt alle Wege im Baum indem es sich für jeden Knoten rekursiv aufruft.
+Um zu verhindern, dass \emph{depth} ``rückwärts'' geht, werden bereits besuchte Knoten markiert.
+
+\paragraph{Korrektheit tree\_diameter}
+
+\emph{tree\_diameter} wird mit einem zusammenhängenden kreisfreien Graphen G aufgerufen.
+\emph{random} wählt einen beliebigen Knoten in G.
+
+\subparagraph{Der Knoten hat den Grad 1}
+
+Der Knoten hat nur einen Nachbarn, \emph{adjc(u, G)} liefert nur einen Nachbarn $u_1$.
+\emph{depth($u_1$)} liefert den längsten möglichen Pfad von $u_1$ zurück.
+Die Liste depths hat genau ein Element $u_1$ und die Sortierung hat keine Wirkung.
+
+\emph{depths[0] + 1} ist der tiefste Pfad von $u_1$ + der Pfad von u nach $u_1$ (== 1).
+Der zweite Teil des Audrucks wird zu 0 ausgewertet, da len(depths) == 1 ist.
+
+\subparagraph{Der Knoten hat einen Grad > 1}
+
+\# TODO
+
+\section*{Aufgabe 5}
+
+\# TODO
+
+\section*{Aufgabe 6}
+
+\begin{verbatim}
+    def init(G):
+        for v in G:
+            if in_deg(v) == 0:
+                follow(v)
+
+    def follow(v):
+        print(v)
+        remove(v)
+        for u in adjc(v):
+            if in_deg(u) == 0:
+                follow(v)
+
+    def top_sort(G): init(G)
 \end{verbatim}
 
 
