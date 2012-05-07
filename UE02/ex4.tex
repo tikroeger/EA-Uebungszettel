@@ -8,49 +8,95 @@
 \paragraph{a)}
 
 \begin{verbatim}
-    def adjc(u, G):
-        # Returns a list of adjecent nodes to node u in graph G.
+    def mark(u):
+        # Markiere Knoten u in Graph G. Die Markierung gilt nur für
+        # alle nachfolgenden Operationen. Wird die Funktion verlassen
+        # so erlischt die Markierung.
 
-    def dist(u, v, G):
-        if u == v:
-            return 1
+    def marked(u):
+        # Ist Knoten u in Graph G markiert?
+
+    def adjc(u):
+        # Gibt die Liste der adjezenten Knoten zurück.
+
+    def dist(u, v):
+        if not marked(u):
+            mark(u)
+            if u == v:
+                return 0
+            else:
+                return min([dist(u_1, v) for u_1 in adjc(u)])+1
         else:
-            return min([dist(u_1, v, G) for u_1 in adjc(u, G)])+1
+            return infinity
 
     def diameter(G):
-        return max([dist(u, v) for u, v in G])
+        return max([dist(u, v, G) for u, v in G])
 \end{verbatim}
+
+\subparagraph{Korrektheit}
+
+\emph{dist(u, v, G)} berechnet den kleinsten Abstand zwischen zwei Knoten u und v.
+
+
+Ist der Knoten u markiert so ist er bereits Teil des Weges. Die Funktion is im Kreis gelaufen.
+Die Länge unendlich wird zurückgegeben, sodass dieser Weg in der Wahl der Wege nicht berücksichtigt wird.
+
+Ist der Knoten u nicht markiert kann man zwei Fälle unterscheiden:
+
+
+Falls $u \neq v$ dann folgt \emph{dist} allen Kanten von u.
+
+
+Falls $u = v$ dann gibt \emph{dist} 0 zurück.
+
+
+Es wird also ein Weg (falls es einen gibt) von u nach v gefunden.
+Da \emph{dist} alle Alternativen überprüft werden alle Wege von u nach v gefunden.
+Die Funktion \emph{min} wählt den kürzesten, und gibt die Länge zurück.
+
+Es wird rekursiv immer der kürzeste Weg zurückgegeben, bis die Länge des kürzesten Weges von u nach v bekannt ist.
+
+\emph{diameter(G)} wählt den längsten kürzesten Pfad zwischen allen Paaren von u, v im Graphen G.
+Somit wird der Durchmesser des Graphen berechnet.
+
+\subparagraph{Komplexität}
+
+Alle Paare aller Kanten in G, die die Funktion \emph{diameter} enumeriert: $O(E^2)$.
+
+Alle Wege in einem Graphen G, die die Funktioen \emph{dist} enumeriert: $O(V+E)$
+
+Gesamtkomplexität: $O((V+E)*E^2)$
 
 \paragraph{b)}
 
 \begin{verbatim}
 def tree_diameter(root, height=1):
-    d_1, lh = tree_diameter(left(root), height+1)
-    d_2, rh = tree_diameter(right(root), height+1)
+    for n in adjc(root):
+        d, h = tree_diameter(n, height+1)
+        ds.append(d)
+        hs.append(h)
 
-    return max([d_1, d_2, (lh + rh + 1)]), max([lh, rh])
+    hs_1 = sort(hs, reversed=True) # Absteigend
+
+    return max(max(ds), hs_1[0] + hs_1[1] + 1)
 \end{verbatim}
 
 Die Suche nach dem längsten Pfad fängt mit der Wurzel des Baumes an.
-Dabei gibt es drei Fälle zu beachten.
+Dabei gibt es zwei Fälle zu beachten.
 
-\subparagraph{Fall 1 -- Der längste Pfad ist vollständig im linken Teilbaum}
+\subparagraph{Fall 1 -- Der längste Pfad ist vollständig in einem Teilbaum}
 
-In diesem Fall liefert \emph{tree\_diameter(left)} den längsten Pfad.
+In diesem Fall liefert \emph{tree\_diameter(n)} (der Durchmesser eben dieses Teilbaumes) den längsten Pfad.
 
-\subparagraph{Fall 2 -- Der längste Pfad ist vollständig im rechten Teilbaum}
+\subparagraph{Fall 2 -- Der längste Pfad geht durch den Wurzelknoten}
 
-In diesem Fall liefert \emph{tree\_diameter(right)} den längsten Pfad.
-
-\subparagraph{Fall 3 -- Der längste Pfad geht durch den Knoten}
-
-In diesem Fall muss der längste Pfad gleich $l_h + r_h + 1$ sein, wobei $l_h$ die Höhe des linken
-Teilbaumes ist und $r_h$ die Höhe des rechten Teilbaumes ist, zusätzlich wird noch der gegenwärtige
-Knoten gerechnet.
+In diesem Fall geht der längste Pfad von dem höchsten Teilbaum über den Wurzelknoten zum zweithöchsten Teilbaum.
 
 Die Höhe eines Teilbaumes ist nämlich der längste Pfad bis zur Wurzel.
 Wenn die Wurzel Teil des längsten Pfades ist, muss der Pfad vom höchsten Knoten eines Teilbaumes über die Wurzel
 zum höchsten Knoten des anderen Teilbaumes verlaufen.
+
+Dabei ist die Länge die Höhe der beiden höchsten Teilbäume plus eins für den Wurzelknoten.
 
 \subparagraph{Komplexität}
 
@@ -59,6 +105,8 @@ Der Algorithmus besucht jeden Knoten einmal, also hat er eine Komplexität von $
 \section*{Aufgabe 5}
 
 \# TODO
+
+\pagebreak % Quelltext nicht über zwei Seiten.
 
 \section*{Aufgabe 6}
 
