@@ -24,53 +24,37 @@
 \paragraph{b)}
 
 \begin{verbatim}
-    def random(G):
-        # Select a node at random in G.
+def tree_diameter(root, height=1):
+    d_1, lh = tree_diameter(left(root), height+1)
+    d_2, rh = tree_diameter(right(root), height+1)
 
-    def mark(u, G):
-        # Marks node u in graph G.
-
-    def marked(u, G):
-        # Checks whether node u in graph G has been marked.
-
-    def depth(u, G):
-        mark(u, G)
-        return max([(depth(u_1, G)+1) \
-            for u_1 in adjc(u) if not marked(u_1, G)]
-            + [1])
-
-    def tree_diameter(G):
-        u = random(G)
-        mark(u, g)
-        dephts = sort([depth(u_1, G) for u_1 in adjc(u, G)])
-        return (depths[0] + 1) \
-            + (depths[1] + 1) if len(depths) > 1 else 0
+    return max([d_1, d_2, (lh + rh + 1)]), max([lh, rh])
 \end{verbatim}
 
-Wir nehmen an der Graph G sei zusammenhängend.
-Da der Graph G ein Baum ist, hat er keine Kreise.
-Somit gibt es genau einen Weg von jedem Knoten zu jedem anderen Knoten.
+Die Suche nach dem längsten Pfad fängt mit der Wurzel des Baumes an.
+Dabei gibt es drei Fälle zu beachten.
 
-\emph{depth} nimmt alle Wege im Baum indem es sich für jeden Knoten rekursiv aufruft.
-Um zu verhindern, dass \emph{depth} ``rückwärts'' geht, werden bereits besuchte Knoten markiert.
+\subparagraph{Fall 1 -- Der längste Pfad ist vollständig im linken Teilbaum}
 
-\paragraph{Korrektheit tree\_diameter}
+In diesem Fall liefert \emph{tree\_diameter(left)} den längsten Pfad.
 
-\emph{tree\_diameter} wird mit einem zusammenhängenden kreisfreien Graphen G aufgerufen.
-\emph{random} wählt einen beliebigen Knoten in G.
+\subparagraph{Fall 2 -- Der längste Pfad ist vollständig im rechten Teilbaum}
 
-\subparagraph{Der Knoten hat den Grad 1}
+In diesem Fall liefert \emph{tree\_diameter(right)} den längsten Pfad.
 
-Der Knoten hat nur einen Nachbarn, \emph{adjc(u, G)} liefert nur einen Nachbarn $u_1$.
-\emph{depth($u_1$)} liefert den längsten möglichen Pfad von $u_1$ zurück.
-Die Liste depths hat genau ein Element $u_1$ und die Sortierung hat keine Wirkung.
+\subparagraph{Fall 3 -- Der längste Pfad geht durch den Knoten}
 
-\emph{depths[0] + 1} ist der tiefste Pfad von $u_1$ + der Pfad von u nach $u_1$ (== 1).
-Der zweite Teil des Audrucks wird zu 0 ausgewertet, da len(depths) == 1 ist.
+In diesem Fall muss der längste Pfad gleich $l_h + r_h + 1$ sein, wobei $l_h$ die Höhe des linken
+Teilbaumes ist und $r_h$ die Höhe des rechten Teilbaumes ist, zusätzlich wird noch der gegenwärtige
+Knoten gerechnet.
 
-\subparagraph{Der Knoten hat einen Grad > 1}
+Die Höhe eines Teilbaumes ist nämlich der längste Pfad bis zur Wurzel.
+Wenn die Wurzel Teil des längsten Pfades ist, muss der Pfad vom höchsten Knoten eines Teilbaumes über die Wurzel
+zum höchsten Knoten des anderen Teilbaumes verlaufen.
 
-\# TODO
+\subparagraph{Komplexität}
+
+Der Algorithmus besucht jeden Knoten einmal, also hat er eine Komplexität von $O(n)$.
 
 \section*{Aufgabe 5}
 
@@ -94,9 +78,10 @@ Der zweite Teil des Audrucks wird zu 0 ausgewertet, da len(depths) == 1 ist.
     def top_sort(G): init(G)
 \end{verbatim}
 
-Wenn es einen Krei gibt (u -> v -> w -> u), so hat keiner der Knoten dein Eingangsgrad 0.
+Wenn es einen Kreis gibt ($u \rightarrow v \rightarrow w \rightarrow u$), so hat keiner der Knoten den Eingangsgrad 0.
 Der Algorithmus kann diesen Kreis nicht auflösen und er bleibt bestehen.
 
-Hat der Graph mehrere Kreise so bleiben alle bestehen, der Graph ist aber nicht mehr notwendigerweise zusammenhängend.
+Hat der Graph mehrere Kreise so bleiben alle bestehen,
+der Graph ist dann aber nicht mehr notwendigerweise zusammenhängend.
 
 \end{document}
