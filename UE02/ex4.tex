@@ -94,7 +94,9 @@ Der zweite Teil des Audrucks wird zu 0 ausgewertet, da len(depths) == 1 ist.
     def top_sort(G): init(G)
 \end{verbatim}
 
+Wenn es einen Krei gibt (u -> v -> w -> u), so hat keiner der Knoten dein Eingangsgrad 0.
+Der Algorithmus kann diesen Kreis nicht auflösen und er bleibt bestehen.
 
-
+Hat der Graph mehrere Kreise so bleiben alle bestehen, der Graph ist aber nicht mehr notwendigerweise zusammenhängend.
 
 \end{document}
